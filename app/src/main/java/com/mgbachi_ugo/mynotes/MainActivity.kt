@@ -19,12 +19,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         // open note details activity
         fabAddNotes.setOnClickListener {
-            val intent = Intent(this, NoteDetails::class.java)
-            startActivity(intent)
+            openNoteDetailsactivity(0)
         }
+        listViewNotes.setOnItemClickListener { parent, view, position, id ->
+            openNoteDetailsactivity(id)
+        }
+    }
 
+    fun openNoteDetailsactivity(noteId:Long)
+    {
+        val intent = Intent(this, NoteDetails::class.java)
+        intent.putExtra("NOTE_ID",noteId)
+        startActivity(intent)
+    }
+
+    override fun onStart() {
+        super.onStart()
         var objToCreateDB = MyNoteSQLiteOpenHelper(this)    // Creates the database and notes table
-         db = objToCreateDB.readableDatabase  //access to the database
+        db = objToCreateDB.readableDatabase  //access to the database
 
         cursor = db!!.query("NOTES", arrayOf("_id", "title"),
             null, null, null, null, null)
